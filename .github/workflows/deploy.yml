@@ -1,0 +1,29 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Application
+        run: |
+          # Ensure target directory exists
+          sudo mkdir -p /home/ubuntu/app
+
+          # Copy contents from GitHub workspace to /home/ubuntu/app
+          sudo cp -r $GITHUB_WORKSPACE/* /home/ubuntu/app/
+
+          # Set correct ownership to avoid permission issues
+          sudo chown -R ubuntu:ubuntu /home/ubuntu/app
+
+          # Navigate to the deployed directory
+          cd /home/ubuntu/app
